@@ -1,6 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
 
 // Create server instance
 const server = new McpServer({
@@ -12,12 +14,57 @@ const server = new McpServer({
   },
 });
 
-async function loadMemoryBank(args: { memoryBankDirectoryPath: string }) {
+// Helper function to recursively get all file paths
+async function getAllFilePaths(dirPath: string): Promise<string[]> {
+  let filePaths: string[] = [];
+  try {
+    const dirents = await fs.readdir(dirPath, { withFileTypes: true });
+    for (const dirent of dirents) {
+      const fullPath = path.join(dirPath, dirent.name);
+      if (dirent.isDirectory()) {
+        // If it's a directory, recurse
+        filePaths = filePaths.concat(await getAllFilePaths(fullPath));
+      } else if (dirent.isFile()) {
+        // If it's a file, add it to the list
+        filePaths.push(fullPath);
+      }
+    }
+  } catch (error: any) {
+    // Ignore errors like directory not found, return empty list
+    if (error.code !== "ENOENT") {
+      console.error(`Error reading directory ${dirPath}:`, error);
+    }
+  }
+  return filePaths;
+}
+
+export async function loadMemoryBank(args: {
+  memoryBankDirectoryPath: string;
+}) {
+  let combinedText = "";
+  try {
+    // 1. Recursively get all file paths
+    const allPaths = await getAllFilePaths(args.memoryBankDirectoryPath);
+
+    // 2. Sort file paths alphabetically
+    allPaths.sort((a, b) => a.localeCompare(b));
+
+    // 3. Read files in sorted order and concatenate content
+    for (const filePath of allPaths) {
+      const fileContent = await fs.readFile(filePath, "utf-8");
+      combinedText += fileContent;
+    }
+  } catch (error: any) {
+    // ENOENT should be handled within getAllFilePaths, but catch other errors just in case
+    console.error("Error in loadMemoryBank:", error);
+    // Return empty string on error (as per test specification)
+  }
+
   return {
     content: [
       {
         type: "text" as const,
-        text: "todo",
+        text: combinedText, // Return the combined content
       },
     ],
   };
