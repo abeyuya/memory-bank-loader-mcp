@@ -33,7 +33,9 @@ describe("loadMemoryBank", () => {
     const relativePath = path.relative(tempDirPath, filePath);
     const expectedText = `# ${relativePath}
 
-${fileContent}`;
+\`\`\`\`
+${fileContent}
+\`\`\`\``;
     expect(result.content).toEqual([{ type: "text", text: expectedText }]);
   });
 
@@ -62,25 +64,33 @@ ${fileContent}`;
     // Expected order: projectbrief.md -> techContext.md -> file1.txt -> file2.txt
     const expectedText = `# ${relPathBrief}
 
+\`\`\`\`
 ${projectBriefContent}
+\`\`\`\`
 
 ---
 
 # ${relPathTech}
 
+\`\`\`\`
 ${techContextContent}
+\`\`\`\`
 
 ---
 
 # ${relPathFile1}
 
+\`\`\`\`
 ${file1Content}
+\`\`\`\`
 
 ---
 
 # ${relPathFile2}
 
-${file2Content}`;
+\`\`\`\`
+${file2Content}
+\`\`\`\``;
 
     const result = await loadMemoryBank({
       memoryBankDirectoryPath: tempDirPath,
@@ -119,31 +129,41 @@ ${file2Content}`;
     // Expected order: systemPatterns.md (priority root) -> bbb_another.txt -> zzz_root.txt (root files first) -> subdir/aaa_sub.txt -> subdir/progress.md (then subdirs)
     const expectedText = `# ${relPathSysPatterns}
 
+\`\`\`\`
 ${systemPatternsContent}
+\`\`\`\`
 
 ---
 
 # ${relPathAnother}
 
+\`\`\`\`
 ${anotherRootFileContent}
+\`\`\`\`
 
 ---
 
 # ${relPathRoot}
 
+\`\`\`\`
 ${rootFileContent}
+\`\`\`\`
 
 ---
 
 # ${relPathSub}
 
+\`\`\`\`
 ${subFileContent}
+\`\`\`\`
 
 ---
 
 # ${relPathProgress}
 
-${progressContent}`;
+\`\`\`\`
+${progressContent}
+\`\`\`\``;
 
     const result = await loadMemoryBank({
       memoryBankDirectoryPath: tempDirPath,
@@ -164,14 +184,19 @@ ${progressContent}`;
     const relativeEmptyPath = path.relative(tempDirPath, emptyFilePath);
     const relativeNonEmptyPath = path.relative(tempDirPath, nonEmptyFilePath);
 
-    // Empty file should still have header (with 2 trailing newlines), separated by ---
+    // Empty file should still have header and an empty code block, separated by ---
     const expectedText = `# ${relativeEmptyPath}
+
+\`\`\`\`
+\`\`\`\`
 
 ---
 
 # ${relativeNonEmptyPath}
 
-${nonEmptyFileContent}`;
+\`\`\`\`
+${nonEmptyFileContent}
+\`\`\`\``;
 
     const result = await loadMemoryBank({
       memoryBankDirectoryPath: tempDirPath,

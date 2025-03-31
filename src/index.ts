@@ -92,11 +92,11 @@ export async function loadMemoryBank(args: {
         filePath
       );
       const fileContent = await fs.readFile(filePath, "utf-8");
-      // Format section: Header + optional content with double newline
-      const sectionHeader = `# ${relativePath}`;
-      const section = fileContent
-        ? `${sectionHeader}\n\n${fileContent}`
-        : sectionHeader;
+      // Format section: Header + Code block (even if empty)
+      // Add newline before closing backticks only if content is not empty
+      const section = `# ${relativePath}\n\n\`\`\`\`\n${fileContent}${
+        fileContent ? "\n" : ""
+      }\`\`\`\``;
       fileSections.push(section);
     }
 
