@@ -46,8 +46,43 @@ export async function loadMemoryBank(args: {
     // 1. Recursively get all file paths
     const allPaths = await getAllFilePaths(args.memoryBankDirectoryPath);
 
-    // 2. Sort file paths alphabetically
-    allPaths.sort((a, b) => a.localeCompare(b));
+    // 2. Sort file paths: prioritize specific files, then alphabetically
+    const priorityOrder = [
+      "projectbrief.md",
+      "productContext.md",
+      "systemPatterns.md",
+      "techContext.md",
+      "activeContext.md",
+      "progress.md",
+    ];
+
+    allPaths.sort((a, b) => {
+      const isARoot = path.dirname(a) === args.memoryBankDirectoryPath;
+      const isBRoot = path.dirname(b) === args.memoryBankDirectoryPath;
+
+      // 1. Root files come before subdirectory files
+      if (isARoot && !isBRoot) return -1;
+      if (!isARoot && isBRoot) return 1;
+
+      // If both are root OR both are subdirectories:
+      const baseA = path.basename(a);
+      const baseB = path.basename(b);
+
+      // 2. Apply priority sort ONLY if both are root files
+      if (isARoot && isBRoot) {
+        const indexA = priorityOrder.indexOf(baseA);
+        const indexB = priorityOrder.indexOf(baseB);
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB; // Both priority root
+        if (indexA !== -1) return -1; // Only A priority root
+        if (indexB !== -1) return 1; // Only B priority root
+        // Fall through if neither is priority root
+      }
+
+      // 3. Sort alphabetically by relative path otherwise
+      const relA = path.relative(args.memoryBankDirectoryPath, a);
+      const relB = path.relative(args.memoryBankDirectoryPath, b);
+      return relA.localeCompare(relB);
+    });
 
     // 3. Read files and prepare sections
     const fileSections: string[] = [];
@@ -77,7 +112,7 @@ export async function loadMemoryBank(args: {
     content: [
       {
         type: "text" as const,
-        text: combinedText, // Return the combined content
+        text: combinedText,
       },
     ],
   };
