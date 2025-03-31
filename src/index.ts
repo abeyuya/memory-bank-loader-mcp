@@ -119,8 +119,8 @@ export async function loadMemoryBank(args: {
 }
 
 server.tool(
-  "load-memory-bank",
-  "Loads and consolidates files from the specified memory bank directory. Use this to provide project context (Memory Bank) to the AI.",
+  "read-memory-bank",
+  "Read and consolidates files from the specified memory bank directory. Use this to provide project context (Memory Bank) to the AI.",
   {
     memoryBankDirectoryFullPath: z
       .string()
