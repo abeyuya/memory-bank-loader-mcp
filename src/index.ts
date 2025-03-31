@@ -49,11 +49,24 @@ export async function loadMemoryBank(args: {
     // 2. Sort file paths alphabetically
     allPaths.sort((a, b) => a.localeCompare(b));
 
-    // 3. Read files in sorted order and concatenate content
+    // 3. Read files and prepare sections
+    const fileSections: string[] = [];
     for (const filePath of allPaths) {
+      const relativePath = path.relative(
+        args.memoryBankDirectoryPath,
+        filePath
+      );
       const fileContent = await fs.readFile(filePath, "utf-8");
-      combinedText += fileContent;
+      // Format section: Header + optional content with double newline
+      const sectionHeader = `# ${relativePath}`;
+      const section = fileContent
+        ? `${sectionHeader}\n\n${fileContent}`
+        : sectionHeader;
+      fileSections.push(section);
     }
+
+    // 4. Join sections with "\n\n---\n\n", avoiding trailing newline
+    combinedText = fileSections.join("\n\n---\n\n");
   } catch (error: any) {
     // ENOENT should be handled within getAllFilePaths, but catch other errors just in case
     console.error("Error in loadMemoryBank:", error);

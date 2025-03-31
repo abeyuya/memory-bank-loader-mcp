@@ -30,7 +30,11 @@ describe("loadMemoryBank", () => {
     const result = await loadMemoryBank({
       memoryBankDirectoryPath: tempDirPath,
     });
-    expect(result.content).toEqual([{ type: "text", text: fileContent }]);
+    const relativePath = path.relative(tempDirPath, filePath);
+    const expectedText = `# ${relativePath}
+
+${fileContent}`;
+    expect(result.content).toEqual([{ type: "text", text: expectedText }]);
   });
 
   it("should return concatenated content of multiple files in the directory (alphabetical order)", async () => {
@@ -42,12 +46,22 @@ describe("loadMemoryBank", () => {
     const file2Content = "Content from file 2.";
     await fs.writeFile(file2Path, file2Content);
 
-    const expectedContent = file1Content + file2Content;
+    const relativePath1 = path.relative(tempDirPath, file1Path);
+    const relativePath2 = path.relative(tempDirPath, file2Path);
+    const expectedText = `# ${relativePath1}
+
+${file1Content}
+
+---
+
+# ${relativePath2}
+
+${file2Content}`;
 
     const result = await loadMemoryBank({
       memoryBankDirectoryPath: tempDirPath,
     });
-    expect(result.content).toEqual([{ type: "text", text: expectedContent }]);
+    expect(result.content).toEqual([{ type: "text", text: expectedText }]);
   });
 
   it("should recursively read files from subdirectories and concatenate content (alphabetical order)", async () => {
@@ -66,12 +80,57 @@ describe("loadMemoryBank", () => {
     const anotherRootFileContent = "Another root file content.";
     await fs.writeFile(anotherRootFilePath, anotherRootFileContent);
 
-    const expectedContent =
-      anotherRootFileContent + rootFileContent + subFileContent;
+    const relativePathAnother = path.relative(tempDirPath, anotherRootFilePath);
+    const relativePathRoot = path.relative(tempDirPath, rootFilePath);
+    const relativePathSub = path.relative(tempDirPath, subFilePath);
+    // Order based on alphabetical path sort: another.txt, root.txt, subdir/sub.txt
+    const expectedText = `# ${relativePathAnother}
+
+${anotherRootFileContent}
+
+---
+
+# ${relativePathRoot}
+
+${rootFileContent}
+
+---
+
+# ${relativePathSub}
+
+${subFileContent}`;
 
     const result = await loadMemoryBank({
       memoryBankDirectoryPath: tempDirPath,
     });
-    expect(result.content).toEqual([{ type: "text", text: expectedContent }]);
+    expect(result.content).toEqual([{ type: "text", text: expectedText }]);
+  });
+
+  it("should handle empty files correctly, including header and newlines", async () => {
+    // Create an empty file
+    const emptyFilePath = path.join(tempDirPath, "empty.txt");
+    await fs.writeFile(emptyFilePath, "");
+
+    // Create a non-empty file (for order check)
+    const nonEmptyFilePath = path.join(tempDirPath, "nonempty.txt");
+    const nonEmptyFileContent = "This file is not empty.";
+    await fs.writeFile(nonEmptyFilePath, nonEmptyFileContent);
+
+    const relativeEmptyPath = path.relative(tempDirPath, emptyFilePath);
+    const relativeNonEmptyPath = path.relative(tempDirPath, nonEmptyFilePath);
+
+    // Empty file should still have header (with 2 trailing newlines), separated by ---
+    const expectedText = `# ${relativeEmptyPath}
+
+---
+
+# ${relativeNonEmptyPath}
+
+${nonEmptyFileContent}`;
+
+    const result = await loadMemoryBank({
+      memoryBankDirectoryPath: tempDirPath,
+    });
+    expect(result.content).toEqual([{ type: "text", text: expectedText }]);
   });
 });
