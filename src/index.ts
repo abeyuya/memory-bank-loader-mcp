@@ -39,12 +39,12 @@ async function getAllFilePaths(dirPath: string): Promise<string[]> {
 }
 
 export async function loadMemoryBank(args: {
-  memoryBankDirectoryPath: string;
+  memoryBankDirectoryFullPath: string;
 }) {
   let combinedText = "";
   try {
     // 1. Recursively get all file paths
-    const allPaths = await getAllFilePaths(args.memoryBankDirectoryPath);
+    const allPaths = await getAllFilePaths(args.memoryBankDirectoryFullPath);
 
     // 2. Sort file paths: prioritize specific files, then alphabetically
     const priorityOrder = [
@@ -57,8 +57,8 @@ export async function loadMemoryBank(args: {
     ];
 
     allPaths.sort((a, b) => {
-      const isARoot = path.dirname(a) === args.memoryBankDirectoryPath;
-      const isBRoot = path.dirname(b) === args.memoryBankDirectoryPath;
+      const isARoot = path.dirname(a) === args.memoryBankDirectoryFullPath;
+      const isBRoot = path.dirname(b) === args.memoryBankDirectoryFullPath;
 
       // 1. Root files come before subdirectory files
       if (isARoot && !isBRoot) return -1;
@@ -79,8 +79,8 @@ export async function loadMemoryBank(args: {
       }
 
       // 3. Sort alphabetically by relative path otherwise
-      const relA = path.relative(args.memoryBankDirectoryPath, a);
-      const relB = path.relative(args.memoryBankDirectoryPath, b);
+      const relA = path.relative(args.memoryBankDirectoryFullPath, a);
+      const relB = path.relative(args.memoryBankDirectoryFullPath, b);
       return relA.localeCompare(relB);
     });
 
@@ -88,7 +88,7 @@ export async function loadMemoryBank(args: {
     const fileSections: string[] = [];
     for (const filePath of allPaths) {
       const relativePath = path.relative(
-        args.memoryBankDirectoryPath,
+        args.memoryBankDirectoryFullPath,
         filePath
       );
       const fileContent = await fs.readFile(filePath, "utf-8");
@@ -120,11 +120,11 @@ export async function loadMemoryBank(args: {
 
 server.tool(
   "load-memory-bank",
-  "Load memory bank",
+  "Loads and consolidates files from the specified memory bank directory. Use this to provide project context (Memory Bank) to the AI.",
   {
-    memoryBankDirectoryPath: z
+    memoryBankDirectoryFullPath: z
       .string()
-      .describe("Path to the memory bank directory"),
+      .describe("Full path to the memory bank directory"),
   },
   loadMemoryBank
 );

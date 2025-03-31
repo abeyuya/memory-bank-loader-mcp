@@ -17,7 +17,7 @@ describe("loadMemoryBank", () => {
 
   it("should return empty content for an empty directory", async () => {
     const result = await loadMemoryBank({
-      memoryBankDirectoryPath: tempDirPath,
+      memoryBankDirectoryFullPath: tempDirPath,
     });
     expect(result.content).toEqual([{ type: "text", text: "" }]);
   });
@@ -28,7 +28,7 @@ describe("loadMemoryBank", () => {
     await fs.writeFile(filePath, fileContent);
 
     const result = await loadMemoryBank({
-      memoryBankDirectoryPath: tempDirPath,
+      memoryBankDirectoryFullPath: tempDirPath,
     });
     const relativePath = path.relative(tempDirPath, filePath);
     const expectedText = `# ${relativePath}
@@ -93,7 +93,7 @@ ${file2Content}
 \`\`\`\``;
 
     const result = await loadMemoryBank({
-      memoryBankDirectoryPath: tempDirPath,
+      memoryBankDirectoryFullPath: tempDirPath,
     });
     expect(result.content).toEqual([{ type: "text", text: expectedText }]);
   });
@@ -166,7 +166,7 @@ ${progressContent}
 \`\`\`\``;
 
     const result = await loadMemoryBank({
-      memoryBankDirectoryPath: tempDirPath,
+      memoryBankDirectoryFullPath: tempDirPath,
     });
     expect(result.content).toEqual([{ type: "text", text: expectedText }]);
   });
@@ -199,7 +199,7 @@ ${nonEmptyFileContent}
 \`\`\`\``;
 
     const result = await loadMemoryBank({
-      memoryBankDirectoryPath: tempDirPath,
+      memoryBankDirectoryFullPath: tempDirPath,
     });
     expect(result.content).toEqual([{ type: "text", text: expectedText }]);
   });
