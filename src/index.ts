@@ -101,8 +101,8 @@ export async function getCombinedMemoryBankContent(
       fileSections.push(section);
     }
 
-    // 4. Join sections with "\n\n---\n\n", avoiding trailing newline
-    combinedText = fileSections.join("\n\n---\n\n");
+    // 4. Join sections with "\n\n", avoiding trailing newline
+    combinedText = fileSections.join("\n\n");
   } catch (error: any) {
     // ENOENT should be handled within getAllFilePaths, but catch other errors just in case
     console.error("Error in loadMemoryBank:", error);

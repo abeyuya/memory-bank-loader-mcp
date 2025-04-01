@@ -64,23 +64,17 @@ ${fileContent}
 ${projectBriefContent}
 \`\`\`\`
 
----
-
 # ${relPathTech}
 
 \`\`\`\`
 ${techContextContent}
 \`\`\`\`
 
----
-
 # ${relPathFile1}
 
 \`\`\`\`
 ${file1Content}
 \`\`\`\`
-
----
 
 # ${relPathFile2}
 
@@ -127,15 +121,11 @@ ${file2Content}
 ${systemPatternsContent}
 \`\`\`\`
 
----
-
 # ${relPathAnother}
 
 \`\`\`\`
 ${anotherRootFileContent}
 \`\`\`\`
-
----
 
 # ${relPathRoot}
 
@@ -143,15 +133,11 @@ ${anotherRootFileContent}
 ${rootFileContent}
 \`\`\`\`
 
----
-
 # ${relPathSub}
 
 \`\`\`\`
 ${subFileContent}
 \`\`\`\`
-
----
 
 # ${relPathProgress}
 
@@ -181,8 +167,6 @@ ${progressContent}
 
 \`\`\`\`
 \`\`\`\`
-
----
 
 # ${relativeNonEmptyPath}
 
