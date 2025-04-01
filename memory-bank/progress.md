@@ -16,17 +16,19 @@
     -   No trailing separator.
 -   Unit tests using Vitest cover all specified scenarios and are passing.
 -   The project builds successfully using `npm run build`.
--   Memory Bank core files have been initialized.
+-   Memory Bank core files have been initialized and populated with initial content.
+-   Project `README.md` has been created and refined based on functionality and examples.
 
 ## What's Left to Build (for this task)
 
--   The core functionality requested for `load-memory-bank` is complete based on the latest requirements.
+-   Core functionality and initial documentation (including README and Memory Bank) are complete.
 -   Further enhancements or error handling could be added if needed (e.g., handling binary files, more specific error reporting).
 
 ## Current Status
 
 -   The `load-memory-bank` tool implementation is complete and tested according to the defined requirements.
--   The Memory Bank core files have been created with initial content reflecting the current project state.
+-   The Memory Bank core files have been updated to reflect the current project state, including README creation.
+-   Project `README.md` is up-to-date.
 
 ## Known Issues
 
@@ -45,3 +47,7 @@
 -   **Sorting Logic v4:** Final logic - Root files first (priority then alpha), then subdirectory files (alpha).
 -   **Output Format v4:** Switched to 4-backtick code blocks for content to prevent Markdown collisions.
 -   **Memory Bank Init:** Populated core Memory Bank files.
+-   **README Creation:** Added a `README.md` with project details.
+-   **README Refinement:** Updated `README.md` based on examples and user feedback.
+-   **Tool Description:** Refined the `load-memory-bank` tool description for clarity.
+-   **.gitignore Update:** Added `build/` directory to `.gitignore` and removed tracked build files.
