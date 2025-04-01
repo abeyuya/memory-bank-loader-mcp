@@ -14,7 +14,7 @@ const server = new McpServer({
   },
 });
 
-// Helper function to recursively get all file paths
+// Helper function to recursively get all file paths (internal)
 async function getAllFilePaths(dirPath: string): Promise<string[]> {
   let filePaths: string[] = [];
   try {
@@ -38,13 +38,14 @@ async function getAllFilePaths(dirPath: string): Promise<string[]> {
   return filePaths;
 }
 
-export async function loadMemoryBank(args: {
-  memoryBankDirectoryFullPath: string;
-}) {
+// Core logic function (exported for testing, could be internal later)
+export async function getCombinedMemoryBankContent(
+  memoryBankDirectoryFullPath: string // Accept string directly
+): Promise<string> {
   let combinedText = "";
   try {
     // 1. Recursively get all file paths
-    const allPaths = await getAllFilePaths(args.memoryBankDirectoryFullPath);
+    const allPaths = await getAllFilePaths(memoryBankDirectoryFullPath); // Use the string arg
 
     // 2. Sort file paths: prioritize specific files, then alphabetically
     const priorityOrder = [
@@ -57,8 +58,8 @@ export async function loadMemoryBank(args: {
     ];
 
     allPaths.sort((a, b) => {
-      const isARoot = path.dirname(a) === args.memoryBankDirectoryFullPath;
-      const isBRoot = path.dirname(b) === args.memoryBankDirectoryFullPath;
+      const isARoot = path.dirname(a) === memoryBankDirectoryFullPath; // Use the string arg
+      const isBRoot = path.dirname(b) === memoryBankDirectoryFullPath; // Use the string arg
 
       // 1. Root files come before subdirectory files
       if (isARoot && !isBRoot) return -1;
@@ -79,8 +80,8 @@ export async function loadMemoryBank(args: {
       }
 
       // 3. Sort alphabetically by relative path otherwise
-      const relA = path.relative(args.memoryBankDirectoryFullPath, a);
-      const relB = path.relative(args.memoryBankDirectoryFullPath, b);
+      const relA = path.relative(memoryBankDirectoryFullPath, a); // Use the string arg
+      const relB = path.relative(memoryBankDirectoryFullPath, b); // Use the string arg
       return relA.localeCompare(relB);
     });
 
@@ -88,7 +89,7 @@ export async function loadMemoryBank(args: {
     const fileSections: string[] = [];
     for (const filePath of allPaths) {
       const relativePath = path.relative(
-        args.memoryBankDirectoryFullPath,
+        memoryBankDirectoryFullPath, // Use the string arg
         filePath
       );
       const fileContent = await fs.readFile(filePath, "utf-8");
@@ -108,25 +109,30 @@ export async function loadMemoryBank(args: {
     // Return empty string on error (as per test specification)
   }
 
-  return {
-    content: [
-      {
-        type: "text" as const,
-        text: combinedText,
-      },
-    ],
-  };
+  return combinedText;
 }
 
 server.tool(
   "read-memory-bank",
-  "Read and consolidates files from the specified memory bank directory. Use this to provide project context (Memory Bank) to the AI.",
+  "Reads and consolidates files from the specified memory bank directory. Use this to provide project context (Memory Bank) to the AI.",
   {
     memoryBankDirectoryFullPath: z
       .string()
       .describe("Full path to the memory bank directory"),
   },
-  loadMemoryBank
+  async (args: { memoryBankDirectoryFullPath: string }) => {
+    const combinedText = await getCombinedMemoryBankContent(
+      args.memoryBankDirectoryFullPath
+    );
+    return {
+      content: [
+        {
+          type: "text",
+          text: combinedText,
+        },
+      ],
+    };
+  }
 );
 
 async function main() {

@@ -2,9 +2,9 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { tmpdir } from "node:os";
-import { loadMemoryBank } from "./index.js";
+import { getCombinedMemoryBankContent } from "./index.js";
 
-describe("loadMemoryBank", () => {
+describe("getCombinedMemoryBankContent", () => {
   let tempDirPath: string;
 
   beforeEach(async () => {
@@ -16,10 +16,8 @@ describe("loadMemoryBank", () => {
   });
 
   it("should return empty content for an empty directory", async () => {
-    const result = await loadMemoryBank({
-      memoryBankDirectoryFullPath: tempDirPath,
-    });
-    expect(result.content).toEqual([{ type: "text", text: "" }]);
+    const combinedTextResult = await getCombinedMemoryBankContent(tempDirPath); // Pass string directly
+    expect(combinedTextResult).toEqual("");
   });
 
   it("should return content of a single file in the directory", async () => {
@@ -27,16 +25,14 @@ describe("loadMemoryBank", () => {
     const fileContent = "Hello from test file!";
     await fs.writeFile(filePath, fileContent);
 
-    const result = await loadMemoryBank({
-      memoryBankDirectoryFullPath: tempDirPath,
-    });
+    const combinedTextResult = await getCombinedMemoryBankContent(tempDirPath); // Pass string directly
     const relativePath = path.relative(tempDirPath, filePath);
     const expectedText = `# ${relativePath}
 
 \`\`\`\`
 ${fileContent}
 \`\`\`\``;
-    expect(result.content).toEqual([{ type: "text", text: expectedText }]);
+    expect(combinedTextResult).toEqual(expectedText);
   });
 
   it("should prioritize specific files then sort alphabetically", async () => {
@@ -92,10 +88,8 @@ ${file1Content}
 ${file2Content}
 \`\`\`\``;
 
-    const result = await loadMemoryBank({
-      memoryBankDirectoryFullPath: tempDirPath,
-    });
-    expect(result.content).toEqual([{ type: "text", text: expectedText }]);
+    const combinedTextResult = await getCombinedMemoryBankContent(tempDirPath); // Pass string directly
+    expect(combinedTextResult).toEqual(expectedText);
   });
 
   it("should prioritize specific files then sort others alphabetically, including subdirectories", async () => {
@@ -165,10 +159,8 @@ ${subFileContent}
 ${progressContent}
 \`\`\`\``;
 
-    const result = await loadMemoryBank({
-      memoryBankDirectoryFullPath: tempDirPath,
-    });
-    expect(result.content).toEqual([{ type: "text", text: expectedText }]);
+    const combinedTextResult = await getCombinedMemoryBankContent(tempDirPath); // Pass string directly
+    expect(combinedTextResult).toEqual(expectedText);
   });
 
   it("should handle empty files correctly, including header and newlines", async () => {
@@ -198,9 +190,7 @@ ${progressContent}
 ${nonEmptyFileContent}
 \`\`\`\``;
 
-    const result = await loadMemoryBank({
-      memoryBankDirectoryFullPath: tempDirPath,
-    });
-    expect(result.content).toEqual([{ type: "text", text: expectedText }]);
+    const combinedTextResult = await getCombinedMemoryBankContent(tempDirPath); // Pass string directly
+    expect(combinedTextResult).toEqual(expectedText);
   });
 });
