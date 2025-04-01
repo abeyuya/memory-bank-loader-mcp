@@ -5,17 +5,33 @@
   "bin": {
     "load": "./build/index.js"
   },
+  "main": "./build/index.js",
   "scripts": {
     "build": "tsc && shx chmod +x build/index.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepare": "npm run build"
   },
   "files": [
     "build"
   ],
-  "keywords": [],
-  "author": "",
+  "description": "This is an MCP server for retrieving all files in the memory-bank directory at once. Its purpose is to reduce AI tool invocation frequency when loading memory-bank, saving both time and money.",
+  "keywords": [
+    "mcp",
+    "ai",
+    "context",
+    "memory-bank",
+    "typescript"
+  ],
+  "author": "https://github.com/abeyuya",
   "license": "ISC",
-  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abeyuya/memory-bank-loader-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/abeyuya/memory-bank-loader-mcp/issues"
+  },
+  "homepage": "https://github.com/abeyuya/memory-bank-loader-mcp",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.8.0",
     "zod": "^3.24.2"
