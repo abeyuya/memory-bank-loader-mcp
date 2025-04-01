@@ -3,6 +3,8 @@
 This is an MCP server for retrieving all files in the memory-bank directory at once.
 Its purpose is to reduce AI tool invocation frequency when loading memory-bank, saving both time and money.
 
+![screenshot](docs/screenshot.png)
+
 ## Features
 
 -   Recursively reads all files within the specified directory (e.g., a 'memory-bank' directory).
