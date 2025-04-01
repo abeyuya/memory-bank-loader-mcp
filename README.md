@@ -34,7 +34,7 @@ Its purpose is to reduce AI tool invocation frequency when loading memory-bank, 
       "command": "npx",
       "args": [
         "-y",
-        "abeyuya/memory-bank-loader-mcp",
+        "memory-bank-loader-mcp@latest",
       ],
     }
   }
