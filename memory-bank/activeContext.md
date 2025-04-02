@@ -2,11 +2,12 @@
 
 ## Current Focus
 
--   Resolving npm publish warning related to the `bin` field in `package.json`.
+-   Resolving npm publish warning related to the `bin` field path format in `package.json`.
 
 ## Recent Changes
 
--   Modified `package.json` to rename the command in the `bin` field from `load` to `memory-bank-loader-mcp`. This resolves the `npm warn publish "bin[load]" script name was cleaned` warning.
+-   Ran `npm pkg fix` which automatically corrected the path in the `bin` field of `package.json` (removed leading `./`) and bumped the package version to `1.0.3`. This resolves the persistent `npm warn publish "bin[...] script name was cleaned` warning.
+-   Previously modified `package.json` to rename the command in the `bin` field from `load` to `memory-bank-loader-mcp`.
 -   Implemented the `loadMemoryBank` function in `src/index.ts` using TDD with Vitest.
 -   The function now recursively reads files, sorts them (prioritizing root files, then specific priority files within the root, then alphabetically by relative path), and formats the output using Markdown headers, 4-backtick code blocks, and `---` separators.
 -   Multiple iterations of TDD cycles were performed to refine the sorting logic and output format based on user feedback.
@@ -21,7 +22,8 @@
 
 ## Next Steps
 
--   Update `progress.md` to reflect the resolution of the npm warning.
+-   Update `progress.md` to reflect the resolution of the npm warning via `npm pkg fix`.
+-   Add and commit the changes made by `npm pkg fix` to `package.json`.
 -   Review the updated Memory Bank files for accuracy and completeness.
 -   Consider any further development or refinement of the `load-memory-bank` tool or the project itself.
 

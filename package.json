@@ -3,7 +3,7 @@
   "name": "memory-bank-loader-mcp",
   "version": "1.0.3",
   "bin": {
-    "memory-bank-loader-mcp": "./build/index.js"
+    "load": "build/index.js"
   },
   "main": "./build/index.js",
   "scripts": {

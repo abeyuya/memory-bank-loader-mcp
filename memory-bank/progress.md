@@ -18,7 +18,7 @@
 -   The project builds successfully using `npm run build`.
 -   Memory Bank core files have been initialized and populated with initial content.
 -   Project `README.md` has been created and refined based on functionality and examples.
--   Resolved `npm publish` warning by renaming the `bin` command from `load` to `memory-bank-loader-mcp` in `package.json`.
+-   Resolved `npm publish` warning by running `npm pkg fix`, which corrected the `bin` path format (removed leading `./`) and bumped the version to `1.0.3`. (Previously also renamed the `bin` command from `load` to `memory-bank-loader-mcp`).
 
 ## What's Left to Build (for this task)
 
@@ -30,7 +30,7 @@
 -   The `load-memory-bank` tool implementation is complete and tested according to the defined requirements.
 -   The Memory Bank core files have been updated to reflect the current project state, including README creation.
 -   Project `README.md` is up-to-date.
--   The `npm publish` warning regarding the `bin` name has been resolved.
+-   The `npm publish` warning regarding the `bin` path format has been resolved using `npm pkg fix`.
 
 ## Known Issues
 
@@ -53,4 +53,5 @@
 -   **README Refinement:** Updated `README.md` based on examples and user feedback.
 -   **Tool Description:** Refined the `load-memory-bank` tool description for clarity.
 -   **.gitignore Update:** Added `build/` directory to `.gitignore` and removed tracked build files.
--   **npm Publish Fix:** Renamed `bin` command from `load` to `memory-bank-loader-mcp` to resolve publish warning.
+-   **npm Publish Fix (Attempt 1):** Renamed `bin` command from `load` to `memory-bank-loader-mcp`.
+-   **npm Publish Fix (Attempt 2):** Ran `npm pkg fix` to correct `bin` path format and bump version.
