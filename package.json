@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "memory-bank-loader-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "bin": {
     "load": "./build/index.js"
   },
