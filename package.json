@@ -3,7 +3,7 @@
   "name": "memory-bank-loader-mcp",
   "version": "1.0.2",
   "bin": {
-    "load": "./build/index.js"
+    "memory-bank-loader-mcp": "./build/index.js"
   },
   "main": "./build/index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/abeyuya/memory-bank-loader-mcp.git"
+    "url": "git+https://github.com/abeyuya/memory-bank-loader-mcp.git"
   },
   "bugs": {
     "url": "https://github.com/abeyuya/memory-bank-loader-mcp/issues"
