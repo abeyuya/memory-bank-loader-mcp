@@ -23,7 +23,7 @@
     "typescript"
   ],
   "author": "https://github.com/abeyuya",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/abeyuya/memory-bank-loader-mcp.git"
