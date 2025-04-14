@@ -114,8 +114,8 @@ export async function getCombinedMemoryBankContent(
 }
 
 server.tool(
-  "read-memory-bank",
-  "Reads and consolidates files from the specified memory bank directory. Use this to provide project context (Memory Bank) to the AI.",
+  "read_memory_bank",
+  "Always use this tool to load the Memory Bank at the start of a task.",
   {
     memoryBankDirectoryFullPath: z
       .string()
