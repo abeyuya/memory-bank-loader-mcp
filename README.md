@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/abeyuya-memory-bank-loader-mcp-badge.png)](https://mseep.ai/app/abeyuya-memory-bank-loader-mcp)
+
 # memory-bank-loader-mcp
 
 This is an MCP server for retrieving all files in the memory-bank directory at once.
